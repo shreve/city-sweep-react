@@ -2,7 +2,7 @@
   "name": "city-sweep",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://shreve.github.io/city-sweep",
+  "homepage": "https://shreve.io/city-sweep",
   "dependencies": {
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

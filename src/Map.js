@@ -33,7 +33,6 @@ class Map extends Component {
       this.loadMap();
     }
     if (prevState !== this.state) {
-      this.updateMap();
       localStorage.setItem('map.state', JSON.stringify(this.state));
     }
   }
@@ -72,15 +71,15 @@ class Map extends Component {
       }, 500);
     };
     this.map.addListener('dragend', pauseStop);
-    this.map.addListener('click', pauseStop);
+    this.map.addListener('zoom_changed', pauseStop);
     this.map.addListener('touchstart', pauseStop);
     this.map.addListener('touchend', pauseStop);
   }
 
-  updateMap() {
-    this.map.panTo(this.state.currentLocation);
-    this.map.setZoom(this.state.currentZoom);
-  }
+  // updateMap() {
+  //   this.map.panTo(this.state.currentLocation);
+  //   this.map.setZoom(this.state.currentZoom);
+  // }
 
   render() {
     const style = {
