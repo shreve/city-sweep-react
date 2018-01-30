@@ -55,13 +55,14 @@ class Map extends Component {
     this.map = new maps.Map(node, mapConfig);
 
     let pauseTimeout = null;
-    this.map.addListener('dragend', (e) => {
+    let pauseStop = (e) => {
       if (pauseTimeout) {
         clearTimeout(pauseTimeout);
         pauseTimeout = null;
       }
       pauseTimeout = setTimeout(() => {
         this.setState({
+          currentZoom: this.map.zoom,
           currentLocation: {
             lng: this.map.center.lng(),
             lat: this.map.center.lat()
@@ -69,7 +70,11 @@ class Map extends Component {
         });
         console.log(this.map.center);
       }, 500);
-    });
+    };
+    this.map.addListener('dragend', pauseStop);
+    this.map.addListener('click', pauseStop);
+    this.map.addListener('touchstart', pauseStop);
+    this.map.addListener('touchend', pauseStop);
   }
 
   updateMap() {
