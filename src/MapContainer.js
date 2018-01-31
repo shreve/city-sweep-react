@@ -24,20 +24,15 @@ class MapContainer extends Component {
   }
 
   render() {
-    const style = {
-      width: '100vw',
-      height: '100vh'
-    };
-
     if (!this.state.loaded) {
-      return <div>Loading Google Libraries...</div>
+      return <div className="MapContainer">Loading Google Libraries...</div>;
     }
 
     return (
-        <div style={style}>
+      <div className="MapContainer">
         <Map google={this.state.google} />
-        </div>
-    )
+      </div>
+    );
   }
 
 }

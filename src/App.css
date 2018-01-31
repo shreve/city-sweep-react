@@ -1,0 +1,42 @@
+.App {
+  height: 100vh;
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+.ControlPanel,
+.MapContainer {
+  height: 100vh;
+  display: block;
+  vertical-align: top;
+}
+
+.ControlPanel {
+  width: 20rem;
+  order: 1;
+}
+
+.MapContainer {
+  flex-grow: 1;
+  order: 2;
+}
+
+@media screen and (max-width: 720px) {
+  .App {
+    flex-wrap: wrap;
+  }
+
+  .ControlPanel {
+    width: 100%;
+    order: 2;
+    height: 40vh;
+  }
+
+  .MapContainer {
+    width: 100%;
+    order: 1;
+    height: 60vh;
+  }
+}

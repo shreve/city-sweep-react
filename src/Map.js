@@ -14,18 +14,28 @@ class Map extends Component {
   componentDidMount() {
     this.loadMap();
 
-    // if (navigator && navigator.geolocation) {
-    //   navigator.geolocation.getCurrentPosition((pos) => {
-    //     console.log(pos.coords);
-    //     this.setState({
-    //       currentLocation: {
-    //         lng: pos.coords.longitude,
-    //         lat: pos.coords.latitude
-    //       }
-    //     });
-    //     this.updateMap();
-    //   });
-    // }
+    if (this.shouldAskForLocation()) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        this.setState({
+          currentLocation: {
+            lng: pos.coords.longitude,
+            lat: pos.coords.latitude
+          }
+        });
+        this.map.panTo(this.state.currentLocation);
+        localStorage.setItem('map.geoloc', true);
+      }, (err) => {
+        if (err.code === err.PERMISSION_DENIED) {
+          localStorage.setItem('map.geoloc', false);
+        }
+      });
+    }
+  }
+
+  shouldAskForLocation() {
+    let approved = (localStorage.getItem('map.geoloc') === null) ||
+        (localStorage.getItem('map.geoloc') === 'true');
+    return navigator && navigator.geolocation && approved;
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -36,7 +46,6 @@ class Map extends Component {
       localStorage.setItem('map.state', JSON.stringify(this.state));
     }
   }
-
 
   loadMap() {
     if (!this.props.google) { return; }
@@ -49,7 +58,8 @@ class Map extends Component {
     const coords = new maps.LatLng(lat, lng);
     const mapConfig = Object.assign({}, {
       center: coords,
-      zoom: this.state.currentZoom
+      zoom: this.state.currentZoom,
+      disableDefaultUI: true
     });
     this.map = new maps.Map(node, mapConfig);
 
@@ -67,7 +77,6 @@ class Map extends Component {
             lat: this.map.center.lat()
           }
         });
-        console.log(this.map.center);
       }, 500);
     };
     this.map.addListener('dragend', pauseStop);
@@ -83,15 +92,15 @@ class Map extends Component {
 
   render() {
     const style = {
-      width: '100vw',
-      height: '100vh'
+      width: '100%',
+      height: '100%'
     };
 
     return (
-        <div ref="map" style={style}>
+      <div ref="map" style={style}>
         Loading Map...
-        </div>
-    )
+      </div>
+    );
   }
 }
 
@@ -100,7 +109,7 @@ if (localStorage && localStorage.getItem('map.state')) {
   Map.defaultProps = {
     zoom: conf.currentZoom,
     start: conf.currentLocation
-  }
+  };
 } else {
   Map.defaultProps = {
     zoom: 15,
@@ -109,7 +118,7 @@ if (localStorage && localStorage.getItem('map.state')) {
       lat: 42.347471,
       lng: -83.057962
     }
-  }
+  };
 }
 
 export default Map;
